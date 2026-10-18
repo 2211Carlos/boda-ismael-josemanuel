@@ -257,12 +257,11 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
   .eyebrow-s,.hint,.float{opacity:1}
 }
 
-.mus{position:fixed;left:16px;bottom:16px;z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-html.js:not(.opened) .mus{display:none}
-.mus button{appearance:none;cursor:pointer;font:500 12px var(--body);letter-spacing:.2em;text-transform:uppercase;min-height:44px;padding:0 18px;border:1px solid var(--wax);background:var(--surface);color:var(--fg);border-radius:999px;box-shadow:0 6px 18px rgba(20,30,60,.18)}
-.mus button:focus-visible{outline:2px solid var(--wax);outline-offset:2px}
-.mus .pl{width:min(320px,calc(100vw - 32px));border-radius:14px;overflow:hidden;box-shadow:0 10px 28px rgba(20,30,60,.25)}
-.mus iframe{display:block;width:100%;height:152px;border:0}
+.snd{position:fixed;left:16px;bottom:16px;z-index:40;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;cursor:pointer;border:1px solid var(--wax);background:var(--surface);color:var(--fg);box-shadow:0 6px 18px rgba(20,30,60,.18)}
+.snd:focus-visible{outline:2px solid var(--wax);outline-offset:2px}
+.snd .off{display:none}
+.snd[aria-pressed=false] .on{display:none}
+.snd[aria-pressed=false] .off{display:inline}
 </style>
 </head>
 <body>
@@ -423,6 +422,10 @@ html.js:not(.opened) .mus{display:none}
   </footer>
 </main>
 
+<audio id="bgm" src="audio/me-prometo.mp3" loop preload="none"></audio>
+<button type="button" id="snd" class="snd" aria-pressed="false" aria-label="Activar o silenciar la música" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><g class="on"><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18 6.5a8 8 0 0 1 0 11"/></g><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+</button>
 <script>
 /* Edita aquí los datos. Lo que dejes vacío no se muestra. */
 var CONFIG = {
@@ -459,9 +462,33 @@ var CONFIG = {
       if (k < 1) requestAnimationFrame(st);
     })(t0);
   }
+  var bgm = document.getElementById("bgm"), snd = document.getElementById("snd"), fadeT;
+  function setSnd(on){ snd.setAttribute("aria-pressed", on ? "true" : "false"); }
+  function fade(to, done){
+    clearInterval(fadeT);
+    fadeT = setInterval(function(){
+      var v = bgm.volume, d = to - v;
+      if (Math.abs(d) < .03) { bgm.volume = to; clearInterval(fadeT); if (done) done(); }
+      else bgm.volume = Math.max(0, Math.min(1, v + (d > 0 ? .03 : -.03)));
+    }, 60);
+  }
+  function startMusic(){
+    try {
+      bgm.volume = 0;
+      var pr = bgm.play();
+      snd.hidden = false;
+      if (pr && pr.then) pr.then(function(){ setSnd(true); fade(.7); }).catch(function(){ setSnd(false); });
+      else { setSnd(true); fade(.7); }
+    } catch(e){ snd.hidden = false; setSnd(false); }
+  }
+  snd.addEventListener("click", function(){
+    if (bgm.paused) { bgm.volume = 0; bgm.play().then(function(){ setSnd(true); fade(.7); }).catch(function(){}); }
+    else { setSnd(false); fade(0, function(){ bgm.pause(); }); }
+  });
   function openEnv(){
     if (root.classList.contains("opening")) return;
     root.classList.add("opening");
+    startMusic();
     env.setAttribute("tabindex", "-1");
     env.style.setProperty("--rx", "0deg"); env.style.setProperty("--ry", "0deg");
     setTimeout(function(){
@@ -612,24 +639,5 @@ var CONFIG = {
 })();
 </script>
 
-<div class="mus" id="mus">
-  <div class="pl" id="musPl" hidden></div>
-  <button type="button" id="musBtn" aria-expanded="false" aria-controls="musPl">♪ Música</button>
-</div>
-<script>
-(function(){
-  var b=document.getElementById("musBtn"),p=document.getElementById("musPl"),loaded=false;
-  b.addEventListener("click",function(){
-    var open=p.hidden;
-    if(open&&!loaded){
-      p.innerHTML='<iframe title="Me prometo, Antoñito Molina" src="https://open.spotify.com/embed/track/6ERLCmirzUaVP9pYvr97VE?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
-      loaded=true;
-    }
-    p.hidden=!open;
-    b.setAttribute("aria-expanded",open);
-    b.textContent=open?"✕ Cerrar":"♪ Música";
-  });
-})();
-</script>
 </body>
 </html>
