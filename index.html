@@ -732,9 +732,12 @@ var CONFIG = {
   function search(){
     var t=norm(q.value); res.textContent=""; hit.hidden=true;
     Array.prototype.forEach.call(plan.querySelectorAll(".t"),function(g){g.classList.remove("on");});
-    if(t.length<2) return;
+    if(t.length<3) return;
     var parts=t.split(" ");
-    var f=D.invitados.filter(function(i){var n=norm(i.nombre);return parts.every(function(p){return n.indexOf(p)>-1;});}).slice(0,8);
+    function score(n){var w=" "+n,sc=0;parts.forEach(function(p){sc+=w.indexOf(" "+p)>-1?0:1;});return sc;}
+    var all=D.invitados.filter(function(i){var n=norm(i.nombre);return parts.every(function(p){return n.indexOf(p)>-1;});});
+    all.sort(function(x,y){return score(norm(x.nombre))-score(norm(y.nombre))||x.nombre.localeCompare(y.nombre,"es");});
+    var f=all.slice(0,8);
     if(!f.length){var li=document.createElement("li");li.className="nores";li.textContent="No encontramos ese nombre. Prueba con tu apellido o pregunta a los novios.";res.appendChild(li);return;}
     if(f.length===1){show(f[0].mesa,f[0],false);return;}
     f.forEach(function(i){
@@ -744,6 +747,7 @@ var CONFIG = {
       b.addEventListener("click",function(){res.textContent="";q.value=i.nombre;show(i.mesa,i,true);});
       li.appendChild(b);res.appendChild(li);
     });
+    if(all.length>f.length){var more=document.createElement("li");more.className="nores";more.textContent="Hay "+(all.length-f.length)+" coincidencias más. Escribe también tu apellido para afinar.";res.appendChild(more);}
   }
   var params=new URLSearchParams(location.search);
   function open(d){
