@@ -256,6 +256,13 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
   *,*::before,*::after{animation:none!important;transition:none!important}
   .eyebrow-s,.hint,.float{opacity:1}
 }
+
+.mus{position:fixed;left:16px;bottom:16px;z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+html.js:not(.opened) .mus{display:none}
+.mus button{appearance:none;cursor:pointer;font:500 12px var(--body);letter-spacing:.2em;text-transform:uppercase;min-height:44px;padding:0 18px;border:1px solid var(--wax);background:var(--surface);color:var(--fg);border-radius:999px;box-shadow:0 6px 18px rgba(20,30,60,.18)}
+.mus button:focus-visible{outline:2px solid var(--wax);outline-offset:2px}
+.mus .pl{width:min(320px,calc(100vw - 32px));border-radius:14px;overflow:hidden;box-shadow:0 10px 28px rgba(20,30,60,.25)}
+.mus iframe{display:block;width:100%;height:152px;border:0}
 </style>
 </head>
 <body>
@@ -602,6 +609,26 @@ var CONFIG = {
     if (rain && drift < 16 && Math.random() < .06) ps.push(mk(rnd(0, W), -20, false));
     requestAnimationFrame(frame);
   }
+})();
+</script>
+
+<div class="mus" id="mus">
+  <div class="pl" id="musPl" hidden></div>
+  <button type="button" id="musBtn" aria-expanded="false" aria-controls="musPl">♪ Música</button>
+</div>
+<script>
+(function(){
+  var b=document.getElementById("musBtn"),p=document.getElementById("musPl"),loaded=false;
+  b.addEventListener("click",function(){
+    var open=p.hidden;
+    if(open&&!loaded){
+      p.innerHTML='<iframe title="Me prometo, Antoñito Molina" src="https://open.spotify.com/embed/track/6ERLCmirzUaVP9pYvr97VE?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
+      loaded=true;
+    }
+    p.hidden=!open;
+    b.setAttribute("aria-expanded",open);
+    b.textContent=open?"✕ Cerrar":"♪ Música";
+  });
 })();
 </script>
 </body>
