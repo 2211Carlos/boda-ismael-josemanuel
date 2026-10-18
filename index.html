@@ -108,6 +108,11 @@ html.js:not(.opened) .hair{transform:scaleX(0)}
 .datebox{display:flex;align-items:flex-end;gap:18px;margin-top:36px}
 .datebox .d{font-family:var(--display);font-size:clamp(92px,27vw,150px);line-height:.78;color:var(--wax);letter-spacing:-.03em}
 .datebox .m{font-size:12px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;line-height:2;color:var(--muted)}
+.when{display:grid;gap:20px;margin-top:30px}
+.when p{margin:0;font-family:var(--display);font-size:clamp(22px,6vw,30px);line-height:1.2}
+.when b{font-weight:500;color:var(--wax);margin-right:.3em}
+.when span{display:block;margin-top:4px;font:300 17px/1.4 var(--body);letter-spacing:.02em;color:var(--muted)}
+dd a.map{display:block;width:fit-content;margin-top:10px;font:400 15px/1.4 var(--body)}
 .where{font-family:var(--display);font-size:clamp(20px,5.4vw,26px);line-height:1.3;margin:26px 0 0;max-width:24ch}
 
 .band{background:var(--deep);color:var(--on-deep);padding-block:68px}
@@ -260,11 +265,14 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
       <p class="poem fade" style="--d:1.4s">Queremos terminar el año con tu presencia.</p>
       <p class="poem fade" style="--d:1.6s">Nos orgullece que pertenezcas a nuestras vidas; ese es el mayor regalo que puede tener una persona.</p>
       <div class="datebox fade" style="--d:1.9s">
-        <span class="sr">19 de diciembre de 2026, 13:00 h</span>
+        <span class="sr">19 de diciembre de 2026</span>
         <span class="d" aria-hidden="true">19</span>
-        <span class="m" aria-hidden="true">diciembre<br>2026<br>13:00 h</span>
+        <span class="m" aria-hidden="true">diciembre<br>2026</span>
       </div>
-      <p class="where fade" style="--d:2.1s">Nos vemos en el Recinto de La Bella, Lepe</p>
+      <div class="when fade" style="--d:2.1s">
+        <p><b>12:00 h</b> Ceremonia<span>Capilla de San Cristóbal, Lepe</span></p>
+        <p><b>14:30 h</b> Celebración<span>Recinto de La Bella, Lepe</span></p>
+      </div>
     </div>
   </header>
 
@@ -276,8 +284,8 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
   </div>
   <div class="marq rev solid" aria-hidden="true">
     <div class="mt">
-      <span>Con cariño<i></i>Recinto de La Bella<i></i>13:00 h<i></i></span>
-      <span>Con cariño<i></i>Recinto de La Bella<i></i>13:00 h<i></i></span>
+      <span>Ceremonia 12:00 h<i></i>Capilla de San Cristóbal<i></i>Celebración 14:30 h<i></i>Recinto de La Bella<i></i></span>
+      <span>Ceremonia 12:00 h<i></i>Capilla de San Cristóbal<i></i>Celebración 14:30 h<i></i>Recinto de La Bella<i></i></span>
     </div>
   </div>
 
@@ -305,6 +313,59 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
     </div>
   </section>
 
+  <section class="sec" aria-labelledby="rsvp">
+    <div class="in">
+      <div class="rv">
+        <h2 id="rsvp">Confirma <em>tu asistencia</em></h2>
+        <p class="lead" id="deadline">Necesitamos tu confirmación para organizarlo todo. Tarda menos de un minuto.</p>
+      </div>
+      <form id="form" class="rv" novalidate>
+        <div>
+          <label for="nombre">Tu nombre</label>
+          <input type="text" id="nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellidos" required>
+        </div>
+        <fieldset class="seg">
+          <legend>Asistencia</legend>
+          <input type="radio" id="si" name="asis" value="si" checked><label for="si">Sí, allí estaré</label>
+          <input type="radio" id="no" name="asis" value="no"><label for="no">No podré ir</label>
+        </fieldset>
+        <div id="extra" style="display:flex;flex-direction:column;gap:30px">
+          <div>
+            <label for="acomp">Personas contigo, sin contarte a ti</label>
+            <select id="acomp" name="acomp">
+              <option value="0">Voy solo/a</option><option value="1">1 acompañante</option>
+              <option value="2">2 acompañantes</option><option value="3">3 acompañantes</option>
+              <option value="4">4 acompañantes</option>
+            </select>
+          </div>
+          <div>
+            <label for="menu">Alergias o menú especial</label>
+            <input type="text" id="menu" name="menu" placeholder="Ej.: sin gluten, vegetariano" autocomplete="off">
+          </div>
+        </div>
+        <div>
+          <label for="msg">Mensaje para Ismael y José Manuel (opcional)</label>
+          <textarea id="msg" name="msg" placeholder="Unas palabras para los novios"></textarea>
+        </div>
+        <p class="err" id="err" role="alert"></p>
+        <button class="btn" type="submit">Preparar mi confirmación</button>
+      </form>
+
+      <div id="result" hidden>
+        <h2 style="font-size:32px">Último paso</h2>
+        <div class="preview" id="preview"></div>
+        <a class="btn" id="wa" href="https://wa.me/" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+        <button class="btn alt" type="button" id="copy">Copiar mensaje</button>
+        <p class="status" id="status" aria-live="polite"></p>
+        <ol class="steps">
+          <li>Toca "Enviar por WhatsApp".</li>
+          <li>Pulsa enviar en el chat que se abre. Tu confirmación solo llega cuando la envías.</li>
+        </ol>
+        <button class="btn alt" type="button" id="back">Cambiar mis datos</button>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="in rv">
       <div class="wax" aria-hidden="true">I&amp;J</div>
@@ -318,10 +379,11 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
 /* Edita aquí los datos. Lo que dejes vacío no se muestra. */
 var CONFIG = {
   fecha: "2026-12-19",
-  hora: "13:00",
-  lugar: "Recinto de La Bella, Lepe",
-  direccion: "",
-  mapa: "https://www.google.com/maps/search/?api=1&query=Recinto+La+Bella+Lepe"
+  hora: "12:00",   /* hora de la ceremonia, para la cuenta atrás */
+  ceremonia: {hora: "12:00", lugar: "Capilla de San Cristóbal, Lepe", mapa: "https://www.google.com/maps/search/?api=1&query=Capilla+San+Cristobal+Lepe"},
+  celebracion: {hora: "14:30", lugar: "Recinto de La Bella, Lepe", mapa: "https://www.google.com/maps/search/?api=1&query=Recinto+La+Bella+Lepe"},
+  limite: "",      /* fecha límite para confirmar, texto libre */
+  whatsapp: ""     /* número de los novios con prefijo y sin +, por ejemplo 34600111222 */
 };
 
 (function(){
@@ -392,15 +454,21 @@ var CONFIG = {
       addFact("Fecha", txt(f.charAt(0).toUpperCase() + f.slice(1)));
     } else { dateObj = null; }
   }
-  if (CONFIG.hora) addFact("Hora", txt(CONFIG.hora + " h"));
-  if (CONFIG.lugar) addFact("Lugar", txt(CONFIG.lugar));
-  if (CONFIG.direccion) addFact("Dirección", txt(CONFIG.direccion));
-  if (CONFIG.mapa) {
-    var a = document.createElement("a"); a.href = CONFIG.mapa; a.target = "_blank"; a.rel = "noopener";
-    a.appendChild(txt("Abrir en Google Maps "));
-    var ar = document.createElement("span"); ar.className = "arr"; ar.setAttribute("aria-hidden", "true"); ar.textContent = "→"; a.appendChild(ar);
-    addFact("Cómo llegar", a);
+  function place(label, ev){
+    if (!ev) return;
+    var box = document.createElement("div");
+    box.appendChild(txt(ev.hora + " h · " + ev.lugar));
+    if (ev.mapa) {
+      var a = document.createElement("a"); a.className = "map"; a.href = ev.mapa; a.target = "_blank"; a.rel = "noopener";
+      a.appendChild(txt("Abrir en Google Maps "));
+      var ar = document.createElement("span"); ar.className = "arr"; ar.setAttribute("aria-hidden", "true"); ar.textContent = "→"; a.appendChild(ar);
+      box.appendChild(a);
+    }
+    addFact(label, box);
   }
+  place("Ceremonia", CONFIG.ceremonia);
+  place("Celebración", CONFIG.celebracion);
+  if (CONFIG.limite) $("deadline").textContent = "Necesitamos tu confirmación antes del " + CONFIG.limite + ".";
 
   /* ---------- Cuenta atrás en vivo (hora de España, diciembre = UTC+1) ---------- */
   var target = new Date(CONFIG.fecha + "T" + (CONFIG.hora || "00:00") + ":00+01:00").getTime();
@@ -429,6 +497,55 @@ var CONFIG = {
     return true;
   }
   (function loop(){ if (tick()) requestAnimationFrame(loop); })();
+
+  /* ---------- Formulario ---------- */
+  var form = $("form"), result = $("result");
+  function toggleExtra(){ $("extra").hidden = form.asis.value === "no"; }
+  form.addEventListener("change", toggleExtra);
+  toggleExtra();
+
+  var message = "";
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var nombre = $("nombre").value.trim();
+    if (!nombre) { $("err").textContent = "Escribe tu nombre para que sepamos quién eres."; $("nombre").focus(); return; }
+    $("err").textContent = "";
+    var vienes = form.asis.value === "si";
+    var lines = ["Hola, Ismael y José Manuel. Soy " + nombre + "."];
+    if (vienes) {
+      lines.push("Confirmo mi asistencia a vuestra boda del 19 de diciembre (ceremonia a las 12:00 y celebración a las 14:30).");
+      var n = +$("acomp").value;
+      lines.push("Acompañantes: " + n + (n ? " (en total somos " + (n+1) + ")" : "") + ".");
+      var menu = $("menu").value.trim();
+      lines.push("Alergias o menú: " + (menu || "ninguno") + ".");
+    } else {
+      lines.push("Lo siento mucho, no podré asistir a vuestra boda.");
+    }
+    var m = $("msg").value.trim();
+    if (m) lines.push("Mensaje: " + m);
+    message = lines.join("\n");
+    $("preview").textContent = message;
+    $("wa").href = "https://wa.me/" + (CONFIG.whatsapp || "") + "?text=" + encodeURIComponent(message);
+    $("status").textContent = "";
+    form.hidden = true; result.hidden = false;
+    result.scrollIntoView({block:"nearest"});
+  });
+
+  $("back").addEventListener("click", function(){ result.hidden = true; form.hidden = false; $("nombre").focus(); });
+
+  $("copy").addEventListener("click", function(){
+    var s = $("status");
+    function fallback(){
+      var r = document.createRange(); r.selectNodeContents($("preview"));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      s.textContent = "Selecciona el texto y cópialo desde el menú del móvil.";
+    }
+    try {
+      navigator.clipboard.writeText(message).then(function(){
+        s.textContent = "Mensaje copiado. Pégalo en el chat de WhatsApp.";
+      }, fallback);
+    } catch (err) { fallback(); }
+  });
 
   /* ---------- Pétalos ---------- */
   if (reduce) return;
