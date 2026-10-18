@@ -293,6 +293,20 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
 .plan .t:focus-visible circle.m{stroke:var(--wax);stroke-width:1}
 .plan-note{font-size:14px;color:var(--muted);margin:10px 0 0}
 @media (prefers-reduced-motion:reduce){.plan .t.on .halo{animation:none;opacity:.6;r:11}}
+
+.plan .route{fill:none;stroke:var(--wax);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:0.1 2.2}
+.plan .route-b{fill:none;stroke:var(--wax);stroke-width:.35;stroke-linecap:round;stroke-linejoin:round;opacity:.35}
+.plan .aqui .pin{fill:var(--wax);stroke:var(--surface);stroke-width:.5}
+.plan .aqui .dot{fill:var(--surface)}
+.plan .aqui .pulse{fill:none;stroke:var(--wax);stroke-width:.5;opacity:0;animation:halo2 2.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.plan .aqui .lab rect{fill:var(--wax)}
+.plan .aqui .lab text{font:500 2.5px var(--body);letter-spacing:.15px;fill:var(--wax-fg);text-anchor:start;dominant-baseline:central}
+@keyframes halo2{0%{opacity:.8;transform:scale(.6)}100%{opacity:0;transform:scale(2.2)}}
+@keyframes flow{to{stroke-dashoffset:-9.2}}
+.plan .route.go{animation:flow 1.1s linear infinite}
+.go-btn{appearance:none;margin:14px 0 0;font:500 12px var(--body);letter-spacing:.2em;text-transform:uppercase;min-height:48px;padding:0 20px;border:1px solid var(--wax);background:transparent;color:var(--wax);cursor:pointer}
+.go-btn:focus-visible{outline:2px solid var(--wax);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.plan .route.go,.plan .aqui .pulse{animation:none}}
 </style>
 </head>
 <body>
@@ -407,7 +421,7 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
       <ul class="res" id="res" aria-live="polite"></ul>
       <div class="hit" id="hit" hidden aria-live="polite"></div>
       <svg class="plan" id="plan" viewBox="0 0 100 110" role="img" aria-label="Plano de las mesas del salón"></svg>
-      <p class="plan-note">Toca una mesa del plano para ver quién se sienta en ella.</p>
+      <p class="plan-note">Toca una mesa del plano para ver quién se sienta en ella. La línea de puntos marca el camino desde la entrada.</p>
     </div>
   </section>
 
@@ -696,14 +710,79 @@ var CONFIG = {
   function norm(t){return String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim();}
   function el(n,a,txt){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
   function tableById(id){return D.mesas.filter(function(m){return m.id==id;})[0];}
+
+  var W=100,H=110;
+  function entrada(){
+    if(D.entrada) return D.entrada;
+    var e=(D.elementos||[]).filter(function(x){return /entrada/i.test(x.texto);})[0];
+    return e?{x:e.x,y:e.y}:{x:50,y:H-4};
+  }
+  function blocked(x,y,target){
+    if(x<1||y<1||x>W-1||y>H-1) return true;
+    for(var i=0;i<D.mesas.length;i++){var m=D.mesas[i];if(m===target)continue;var dx=x-m.x,dy=y-m.y;if(dx*dx+dy*dy<=9.8*9.8) return true;}
+    var els=D.elementos||[];
+    for(var j=0;j<els.length;j++){var e=els[j];
+      var bl=e.bloquea!==undefined?e.bloquea:/novios|presidencia|barra|escenario|buffet/i.test(e.texto);
+      if(bl&&Math.abs(x-e.x)<=e.w/2+1&&Math.abs(y-e.y)<=e.h/2+1) return true;}
+    return false;
+  }
+  function route(target){
+    var st=entrada(),sx=Math.round(st.x),sy=Math.round(st.y);
+    var key=function(x,y){return y*(W+1)+x;};
+    var open=[[0,sx,sy]],g={},came={};g[key(sx,sy)]=0;
+    var dirs=[[1,0,1],[-1,0,1],[0,1,1],[0,-1,1],[1,1,1.414],[1,-1,1.414],[-1,1,1.414],[-1,-1,1.414]];
+    function goal(x,y){var dx=x-target.x,dy=y-target.y;return dx*dx+dy*dy<=10.3*10.3;}
+    var end=null,guard=0;
+    while(open.length&&guard++<40000){
+      var bi=0;for(var k=1;k<open.length;k++) if(open[k][0]<open[bi][0]) bi=k;
+      var c=open.splice(bi,1)[0],cx=c[1],cy=c[2];
+      if(goal(cx,cy)){end=[cx,cy];break;}
+      for(var d=0;d<8;d++){
+        var nx=cx+dirs[d][0],ny=cy+dirs[d][1];
+        if(blocked(nx,ny,target)&&!goal(nx,ny)) continue;
+        var ng=g[key(cx,cy)]+dirs[d][2],kk=key(nx,ny);
+        if(g[kk]===undefined||ng<g[kk]){g[kk]=ng;came[kk]=[cx,cy];
+          var h=Math.hypot(nx-target.x,ny-target.y);open.push([ng+h,nx,ny]);}
+      }
+    }
+    if(!end) return null;
+    var pts=[end],cur=end;
+    while(came[key(cur[0],cur[1])]){cur=came[key(cur[0],cur[1])];pts.push(cur);}
+    pts.reverse();
+    // simplificar: línea de visión
+    function clear(a,b){var n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1]));for(var i=0;i<=n;i++){var x=a[0]+(b[0]-a[0])*i/n,y=a[1]+(b[1]-a[1])*i/n;if(blocked(x,y,target)&&!goal(x,y))return false;}return true;}
+    var out=[pts[0]],i0=0;
+    while(i0<pts.length-1){var j=pts.length-1;while(j>i0+1&&!clear(pts[i0],pts[j]))j--;out.push(pts[j]);i0=j;}
+    return out;
+  }
+  function drawRoute(m){
+    var g=plan.querySelector(".routeg"); if(!g) return; g.textContent="";
+    if(!m) return;
+    var r=route(m); if(!r||r.length<2) return;
+    var dpath=r.map(function(p,i){return(i?"L":"M")+p[0]+" "+p[1];}).join(" ");
+    g.appendChild(el("path",{"class":"route-b",d:dpath}));
+    var path=el("path",{"class":"route go",d:dpath});g.appendChild(path);
+  }
+  function marker(){
+    var e=entrada(),g=el("g",{"class":"aqui"});
+    g.appendChild(el("circle",{"class":"pulse",cx:e.x,cy:e.y,r:3}));
+    g.appendChild(el("path",{"class":"pin",d:"M"+e.x+" "+(e.y+1.6)+"C"+(e.x-3.6)+" "+(e.y-2.6)+" "+(e.x-3.2)+" "+(e.y-6.4)+" "+e.x+" "+(e.y-6.4)+"C"+(e.x+3.2)+" "+(e.y-6.4)+" "+(e.x+3.6)+" "+(e.y-2.6)+" "+e.x+" "+(e.y+1.6)+"Z"}));
+    g.appendChild(el("circle",{"class":"dot",cx:e.x,cy:e.y-3.6,r:1.1}));
+    var lab=el("g",{"class":"lab"}),txt="Usted está aquí",w=txt.length*1.55+3,lx=e.x+4.6,ly=e.y-3.6;
+    if(lx+w>W-1) lx=e.x-4.6-w;
+    lab.appendChild(el("rect",{x:lx,y:ly-2.3,width:w,height:4.6,rx:2.3}));
+    lab.appendChild(el("text",{x:lx+1.6,y:ly},txt));
+    g.appendChild(lab);return g;
+  }
   function draw(){
     plan.textContent="";
-    var vb=D.vista||[100,110]; plan.setAttribute("viewBox","0 0 "+vb[0]+" "+vb[1]);
+    var vb=D.vista||[100,110]; W=vb[0];H=vb[1]; plan.setAttribute("viewBox","0 0 "+vb[0]+" "+vb[1]);
     (D.elementos||[]).forEach(function(e){
       var g=el("g",{"class":"el"});
       g.appendChild(el("rect",{x:e.x-e.w/2,y:e.y-e.h/2,width:e.w,height:e.h,rx:1.2}));
-      g.appendChild(el("text",{x:e.x,y:e.y},e.texto)); plan.appendChild(g);
+      if(!/entrada/i.test(e.texto)||D.entrada) g.appendChild(el("text",{x:e.x,y:e.y},e.texto)); plan.appendChild(g);
     });
+    plan.appendChild(el("g",{"class":"routeg"}));
     D.mesas.forEach(function(m){
       var g=el("g",{"class":"t","data-id":m.id,tabindex:0,role:"button","aria-label":m.nombre});
       g.appendChild(el("circle",{"class":"halo",cx:m.x,cy:m.y,r:8}));
@@ -715,6 +794,7 @@ var CONFIG = {
       g.addEventListener("keydown",function(ev){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();show(m.id,null,false);}});
       plan.appendChild(g);
     });
+    plan.appendChild(marker());
   }
   function show(id,persona,scroll){
     sel=id; var m=tableById(id); if(!m) return;
@@ -726,11 +806,16 @@ var CONFIG = {
     var h3=document.createElement("h3");h3.textContent="En tu mesa";
     var ul=document.createElement("ul");ul.className="mates";
     mates.forEach(function(i){var li=document.createElement("li");li.textContent=i.nombre;if(persona&&i===persona)li.className="me";ul.appendChild(li);});
-    hit.appendChild(p1);hit.appendChild(h);hit.appendChild(h3);hit.appendChild(ul);hit.hidden=false;
+    hit.appendChild(p1);hit.appendChild(h);
+    var btn=document.createElement("button");btn.type="button";btn.className="go-btn";btn.textContent="Ver cómo llegar";
+    btn.addEventListener("click",function(){var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;plan.scrollIntoView({behavior:r?"auto":"smooth",block:"center"});});
+    hit.appendChild(btn);
+    hit.appendChild(h3);hit.appendChild(ul);hit.hidden=false;
+    drawRoute(m);
     if(scroll!==false){var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;hit.scrollIntoView({behavior:r?"auto":"smooth",block:"center"});}
   }
   function search(){
-    var t=norm(q.value); res.textContent=""; hit.hidden=true;
+    var t=norm(q.value); res.textContent=""; hit.hidden=true; drawRoute(null);
     Array.prototype.forEach.call(plan.querySelectorAll(".t"),function(g){g.classList.remove("on");});
     if(t.length<3) return;
     var parts=t.split(" ");
