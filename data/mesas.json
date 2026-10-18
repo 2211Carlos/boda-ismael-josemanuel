@@ -1,6 +1,7 @@
 {
- "visibleDesde": "2026-12-19",
+ "visibleDesde": "2026-12-19T14:30:00+01:00",
  "mesas": [],
  "elementos": [],
- "invitados": []
+ "invitados": [],
+ "codigo": "MESA1219"
 }

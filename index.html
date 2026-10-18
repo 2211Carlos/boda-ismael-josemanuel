@@ -745,10 +745,20 @@ var CONFIG = {
       li.appendChild(b);res.appendChild(li);
     });
   }
+  var params=new URLSearchParams(location.search);
+  function open(d){
+    if(demo) return true;
+    var cod=(d.codigo||"").toString().trim().toLowerCase(), got=(params.get("codigo")||"").trim().toLowerCase();
+    if(cod&&got===cod) return true;
+    if(!d.visibleDesde) return true;
+    return new Date()>=new Date(d.visibleDesde);
+  }
+  function start(){ draw(); sec.hidden=false; q.addEventListener("input",search); }
   fetch(url,{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(d){
     if(!d||!d.mesas||!d.mesas.length||!d.invitados||!d.invitados.length) return;
-    if(!demo&&d.visibleDesde&&new Date()<new Date(d.visibleDesde+"T00:00:00+01:00")) return;
-    D=d; draw(); sec.hidden=false; q.addEventListener("input",search);
+    D=d;
+    if(open(d)){ start(); return; }
+    var t=setInterval(function(){ if(open(d)){ clearInterval(t); start(); } },30000);
   }).catch(function(){});
 })();
 </script>
