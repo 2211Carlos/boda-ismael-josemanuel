@@ -113,6 +113,32 @@ html.js:not(.opened) .hair{transform:scaleX(0)}
 .when b{font-weight:500;color:var(--wax);margin-right:.3em}
 .when span{display:block;margin-top:4px;font:300 17px/1.4 var(--body);letter-spacing:.02em;color:var(--muted)}
 dd a.map{display:block;width:fit-content;margin-top:10px;font:400 15px/1.4 var(--body)}
+.phw{position:relative;width:min(80%,340px);margin:38px 0 6px 4px}
+.phw::before{content:"";position:absolute;inset:0;transform:translate(14px,14px);border:1px solid var(--wax);border-radius:999px 999px 6px 6px;opacity:.75;transition:opacity 1.2s ease 2.8s}
+html.js:not(.opened) .phw::before{opacity:0}
+.ph{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:999px 999px 6px 6px;background:var(--line);transition:clip-path 1.9s cubic-bezier(.6,0,.2,1) var(--d,0s)}
+html.js:not(.opened) .ph{clip-path:inset(100% 0 0 0)}
+.ph img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 52%;transform:scale(1.12);transition:transform 2.8s cubic-bezier(.2,.75,.15,1) var(--d,0s)}
+html.js:not(.opened) .ph img{transform:scale(1.4)}
+.tl{list-style:none;margin:30px 0 0;padding:0 0 0 38px;position:relative;display:grid;gap:64px}
+.tl::before,.tl::after{content:"";position:absolute;left:7px;top:10px;bottom:10px;width:1px;transform-origin:top}
+.tl::before{background:var(--line)}
+.tl::after{background:var(--wax)}
+.ev{position:relative;min-width:0}
+.ev::before{content:"";position:absolute;left:-38px;top:12px;width:15px;height:15px;border-radius:50%;background:var(--paper);border:2px solid var(--wax);box-shadow:0 0 0 6px var(--paper)}
+.hr{display:block;font-family:var(--display);font-size:clamp(44px,13vw,64px);line-height:1;letter-spacing:-.02em;color:var(--wax)}
+.hr small{font:400 15px var(--body);letter-spacing:.2em;color:var(--muted);margin-left:2px}
+.ev h3{margin:10px 0 18px;font:400 clamp(26px,7vw,34px)/1.1 var(--display)}
+.pic{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 60%;border-radius:4px;margin-bottom:18px;background:var(--line)}
+.pl{margin:0;font:400 clamp(20px,5.4vw,24px)/1.25 var(--display)}
+address{font-style:normal;color:var(--muted);margin:4px 0 20px}
+.ev .btn{max-width:320px}
+@keyframes drawy{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes ph{from{translate:0 5%}to{translate:0 -5%}}
+@supports (animation-timeline: view()){
+  .tl::after{animation:drawy linear both;animation-timeline:view();animation-range:entry 30% cover 55%}
+  .ph img{animation:ph linear both;animation-timeline:view();animation-range:cover}
+}
 .where{font-family:var(--display);font-size:clamp(20px,5.4vw,26px);line-height:1.3;margin:26px 0 0;max-width:24ch}
 
 .band{background:var(--deep);color:var(--on-deep);padding-block:68px}
@@ -133,7 +159,7 @@ h2 em{color:var(--wax)}
 .num b{display:block;font-weight:400}
 .num b.roll{animation:roll .9s cubic-bezier(.2,.8,.2,1)}
 .unit{display:block;margin-top:8px;font-size:11px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;opacity:.65}
-.cell.sec .unit::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;border-radius:50%;background:var(--wax-soft);vertical-align:middle;animation:dot 2s ease-in-out infinite}
+.cell.secs .unit::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;border-radius:50%;background:var(--wax-soft);vertical-align:middle;animation:dot 2s ease-in-out infinite}
 .today{font-family:var(--display);font-style:italic;font-size:30px;margin:0;color:var(--wax-soft)}
 
 .sec{padding-block:76px 12px}
@@ -262,6 +288,7 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
         <span class="ln"><span style="--d:.8s">José Manuel</span></span>
       </h1>
       <div class="hair"></div>
+      <div class="phw" style="--d:1.1s"><div class="ph"><img src="images/novios.jpg" width="900" height="1350" alt="Ismael y José Manuel, abrazados y sonriendo"></div></div>
       <p class="poem fade" style="--d:1.4s">Queremos terminar el año con tu presencia.</p>
       <p class="poem fade" style="--d:1.6s">Nos orgullece que pertenezcas a nuestras vidas; ese es el mayor regalo que puede tener una persona.</p>
       <div class="datebox fade" style="--d:1.9s">
@@ -297,7 +324,7 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
         <div class="cell"><span class="dial"><svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="46"/><circle class="prg" id="rg-d" cx="50" cy="50" r="46"/></svg><span class="num"><b id="cd-d">000</b></span></span><span class="unit">días</span></div>
         <div class="cell"><span class="dial"><svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="46"/><circle class="prg" id="rg-h" cx="50" cy="50" r="46"/></svg><span class="num"><b id="cd-h">00</b></span></span><span class="unit">horas</span></div>
         <div class="cell"><span class="dial"><svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="46"/><circle class="prg" id="rg-m" cx="50" cy="50" r="46"/></svg><span class="num"><b id="cd-m">00</b></span></span><span class="unit">min</span></div>
-        <div class="cell sec"><span class="dial"><svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="46"/><circle class="prg" id="rg-s" cx="50" cy="50" r="46"/></svg><span class="num"><b id="cd-s">00</b></span></span><span class="unit">seg</span></div>
+        <div class="cell secs"><span class="dial"><svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="46"/><circle class="prg" id="rg-s" cx="50" cy="50" r="46"/></svg><span class="num"><b id="cd-s">00</b></span></span><span class="unit">seg</span></div>
       </div>
       <p class="today" id="today" hidden>Hoy es el día.</p>
     </div>
@@ -307,9 +334,25 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
     <div class="in">
       <div class="rv">
         <h2 id="det">El <em>día</em></h2>
-        <p class="lead">Todo lo que necesitas saber, en un solo enlace.</p>
+        <p class="lead">Sábado, 19 de diciembre de 2026</p>
       </div>
-      <dl id="facts"></dl>
+      <ol class="tl">
+        <li class="ev rv">
+          <time class="hr" datetime="2026-12-19T12:00">12:00<small> h</small></time>
+          <h3>Ceremonia</h3>
+          <img class="pic" src="images/capilla.jpg" width="779" height="756" loading="lazy" alt="Fachada blanca de la Capilla de San Cristóbal, con puerta de madera en arco">
+          <p class="pl">Capilla de San Cristóbal</p>
+          <address>C. San Cristóbal, 4<br>21440 Lepe, Huelva</address>
+          <a class="btn alt" href="https://www.google.com/maps/search/?api=1&query=C.+San+Crist%C3%B3bal%2C+4%2C+21440+Lepe%2C+Huelva" target="_blank" rel="noopener">Cómo llegar</a>
+        </li>
+        <li class="ev rv">
+          <time class="hr" datetime="2026-12-19T14:30">14:30<small> h</small></time>
+          <h3>Celebración</h3>
+          <p class="pl">Recinto de La Bella</p>
+          <address>Lepe, Huelva</address>
+          <a class="btn alt" href="https://www.google.com/maps/search/?api=1&query=Recinto+La+Bella+Lepe" target="_blank" rel="noopener">Cómo llegar</a>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -380,8 +423,6 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
 var CONFIG = {
   fecha: "2026-12-19",
   hora: "12:00",   /* hora de la ceremonia, para la cuenta atrás */
-  ceremonia: {hora: "12:00", lugar: "Capilla de San Cristóbal, Lepe", mapa: "https://www.google.com/maps/search/?api=1&query=Capilla+San+Cristobal+Lepe"},
-  celebracion: {hora: "14:30", lugar: "Recinto de La Bella, Lepe", mapa: "https://www.google.com/maps/search/?api=1&query=Recinto+La+Bella+Lepe"},
   limite: "",      /* fecha límite para confirmar, texto libre */
   whatsapp: ""     /* número de los novios con prefijo y sin +, por ejemplo 34600111222 */
 };
@@ -436,38 +477,6 @@ var CONFIG = {
     env.style.setProperty("--rx", (-(e.clientY / window.innerHeight - .5) * 12).toFixed(1) + "deg");
   });
 
-  /* ---------- Datos del día ---------- */
-  var facts = $("facts");
-  function addFact(label, node){
-    var row = document.createElement("div"); row.className = "row rv";
-    var dt = document.createElement("dt"); dt.textContent = label;
-    var dd = document.createElement("dd"); dd.appendChild(node);
-    row.appendChild(dt); row.appendChild(dd); facts.appendChild(row);
-  }
-  function txt(s){ return document.createTextNode(s); }
-  var dateObj = null;
-  if (CONFIG.fecha) {
-    var p = CONFIG.fecha.split("-");
-    dateObj = new Date(+p[0], +p[1]-1, +p[2], 0, 0, 0);
-    if (!isNaN(dateObj)) {
-      var f = dateObj.toLocaleDateString("es-ES", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
-      addFact("Fecha", txt(f.charAt(0).toUpperCase() + f.slice(1)));
-    } else { dateObj = null; }
-  }
-  function place(label, ev){
-    if (!ev) return;
-    var box = document.createElement("div");
-    box.appendChild(txt(ev.hora + " h · " + ev.lugar));
-    if (ev.mapa) {
-      var a = document.createElement("a"); a.className = "map"; a.href = ev.mapa; a.target = "_blank"; a.rel = "noopener";
-      a.appendChild(txt("Abrir en Google Maps "));
-      var ar = document.createElement("span"); ar.className = "arr"; ar.setAttribute("aria-hidden", "true"); ar.textContent = "→"; a.appendChild(ar);
-      box.appendChild(a);
-    }
-    addFact(label, box);
-  }
-  place("Ceremonia", CONFIG.ceremonia);
-  place("Celebración", CONFIG.celebracion);
   if (CONFIG.limite) $("deadline").textContent = "Necesitamos tu confirmación antes del " + CONFIG.limite + ".";
 
   /* ---------- Cuenta atrás en vivo (hora de España, diciembre = UTC+1) ---------- */
