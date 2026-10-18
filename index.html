@@ -262,6 +262,37 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
 .snd .off{display:none}
 .snd[aria-pressed=false] .on{display:none}
 .snd[aria-pressed=false] .off{display:inline}
+
+/* Tu mesa */
+.mesa-search{display:flex;flex-direction:column;gap:10px;margin:0 0 20px}
+.mesa-search label{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.res{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column}
+.res button{appearance:none;width:100%;text-align:left;font:400 18px var(--display);color:var(--fg);background:transparent;border:0;border-bottom:1px solid var(--line);padding:14px 2px;min-height:52px;cursor:pointer;display:flex;justify-content:space-between;gap:12px}
+.res button span{font:500 12px var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--wax);align-self:center}
+.res button:focus-visible{outline:2px solid var(--wax);outline-offset:2px}
+.hit{border:1px solid var(--wax);background:var(--surface);padding:22px 22px 18px;margin:0 0 22px}
+.hit .who{font:400 15px var(--body);color:var(--muted);margin:0 0 4px}
+.hit .tbl{font:400 clamp(40px,12vw,60px)/1.05 var(--display);color:var(--wax);margin:0 0 12px}
+.hit .mates{margin:0;padding:0;list-style:none;columns:1;font-size:16px;line-height:1.7;color:var(--fg)}
+.hit .mates .me{font-weight:500;color:var(--wax)}
+.hit h3{font:500 12px var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+.nores{color:var(--muted);margin:0 0 18px}
+.plan{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line)}
+.plan .el rect{fill:none;stroke:var(--line);stroke-width:.5;stroke-dasharray:1.4 1.2}
+.plan .el text{font:400 2.7px var(--body);letter-spacing:.2px;fill:var(--muted);text-anchor:middle;dominant-baseline:middle}
+.plan .t{cursor:pointer}
+.plan .t circle.m{fill:var(--paper);stroke:var(--fg);stroke-width:.5}
+.plan .t text{font:400 4.6px var(--display);fill:var(--fg);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.plan .t .ch{fill:var(--line)}
+.plan .t.on circle.m{fill:var(--wax);stroke:var(--wax)}
+.plan .t.on text{fill:var(--wax-fg)}
+.plan .t.on .ch{fill:var(--wax)}
+.plan .t .halo{fill:none;stroke:var(--wax);stroke-width:.6;opacity:0}
+.plan .t.on .halo{animation:halo 1.8s ease-out infinite}
+@keyframes halo{0%{opacity:.9;r:8}100%{opacity:0;r:15}}
+.plan .t:focus-visible circle.m{stroke:var(--wax);stroke-width:1}
+.plan-note{font-size:14px;color:var(--muted);margin:10px 0 0}
+@media (prefers-reduced-motion:reduce){.plan .t.on .halo{animation:none;opacity:.6;r:11}}
 </style>
 </head>
 <body>
@@ -359,6 +390,24 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
           <a class="btn alt" href="https://www.google.com/maps/search/?api=1&query=Recinto+La+Bella+Lepe" target="_blank" rel="noopener">Cómo llegar</a>
         </li>
       </ol>
+    </div>
+  </section>
+
+
+  <section class="sec" id="mesas" aria-labelledby="mesah" hidden>
+    <div class="in">
+      <div class="rv">
+        <h2 id="mesah">Encuentra <em>tu mesa</em></h2>
+        <p class="lead">Escribe tu nombre o apellido y te mostramos dónde vas a sentarte.</p>
+      </div>
+      <div class="mesa-search">
+        <label for="q">Tu nombre</label>
+        <input type="text" id="q" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Ej.: Ana García" aria-controls="res">
+      </div>
+      <ul class="res" id="res" aria-live="polite"></ul>
+      <div class="hit" id="hit" hidden aria-live="polite"></div>
+      <svg class="plan" id="plan" viewBox="0 0 100 110" role="img" aria-label="Plano de las mesas del salón"></svg>
+      <p class="plan-note">Toca una mesa del plano para ver quién se sienta en ella.</p>
     </div>
   </section>
 
@@ -636,6 +685,71 @@ var CONFIG = {
     if (rain && drift < 16 && Math.random() < .06) ps.push(mk(rnd(0, W), -20, false));
     requestAnimationFrame(frame);
   }
+})();
+
+(function(){
+  var sec=document.getElementById("mesas"); if(!sec) return;
+  var demo=/[?&]demo\b/.test(location.search);
+  var url=demo?"data/mesas-demo.json":"data/mesas.json";
+  var q=document.getElementById("q"),res=document.getElementById("res"),hit=document.getElementById("hit"),plan=document.getElementById("plan");
+  var NS="http://www.w3.org/2000/svg",D=null,sel=null;
+  function norm(t){return String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim();}
+  function el(n,a,txt){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+  function tableById(id){return D.mesas.filter(function(m){return m.id==id;})[0];}
+  function draw(){
+    plan.textContent="";
+    var vb=D.vista||[100,110]; plan.setAttribute("viewBox","0 0 "+vb[0]+" "+vb[1]);
+    (D.elementos||[]).forEach(function(e){
+      var g=el("g",{"class":"el"});
+      g.appendChild(el("rect",{x:e.x-e.w/2,y:e.y-e.h/2,width:e.w,height:e.h,rx:1.2}));
+      g.appendChild(el("text",{x:e.x,y:e.y},e.texto)); plan.appendChild(g);
+    });
+    D.mesas.forEach(function(m){
+      var g=el("g",{"class":"t","data-id":m.id,tabindex:0,role:"button","aria-label":m.nombre});
+      g.appendChild(el("circle",{"class":"halo",cx:m.x,cy:m.y,r:8}));
+      var n=m.sillas||8;
+      for(var i=0;i<n;i++){var a=i/n*Math.PI*2;g.appendChild(el("circle",{"class":"ch",cx:m.x+Math.cos(a)*8,cy:m.y+Math.sin(a)*8,r:1.3}));}
+      g.appendChild(el("circle",{"class":"m",cx:m.x,cy:m.y,r:6}));
+      g.appendChild(el("text",{x:m.x,y:m.y},String(m.nombre).replace(/^\D*/,"")||m.nombre));
+      g.addEventListener("click",function(){show(m.id,null,false);});
+      g.addEventListener("keydown",function(ev){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();show(m.id,null,false);}});
+      plan.appendChild(g);
+    });
+  }
+  function show(id,persona,scroll){
+    sel=id; var m=tableById(id); if(!m) return;
+    Array.prototype.forEach.call(plan.querySelectorAll(".t"),function(g){g.classList.toggle("on",g.getAttribute("data-id")==id);});
+    var mates=D.invitados.filter(function(i){return i.mesa==id;});
+    hit.textContent="";
+    var p1=document.createElement("p");p1.className="who";p1.textContent=persona?persona.nombre+", tu mesa es la":"Mesa seleccionada";
+    var h=document.createElement("p");h.className="tbl";h.textContent=m.nombre;
+    var h3=document.createElement("h3");h3.textContent="En tu mesa";
+    var ul=document.createElement("ul");ul.className="mates";
+    mates.forEach(function(i){var li=document.createElement("li");li.textContent=i.nombre;if(persona&&i===persona)li.className="me";ul.appendChild(li);});
+    hit.appendChild(p1);hit.appendChild(h);hit.appendChild(h3);hit.appendChild(ul);hit.hidden=false;
+    if(scroll!==false){var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;hit.scrollIntoView({behavior:r?"auto":"smooth",block:"center"});}
+  }
+  function search(){
+    var t=norm(q.value); res.textContent=""; hit.hidden=true;
+    Array.prototype.forEach.call(plan.querySelectorAll(".t"),function(g){g.classList.remove("on");});
+    if(t.length<2) return;
+    var parts=t.split(" ");
+    var f=D.invitados.filter(function(i){var n=norm(i.nombre);return parts.every(function(p){return n.indexOf(p)>-1;});}).slice(0,8);
+    if(!f.length){var li=document.createElement("li");li.className="nores";li.textContent="No encontramos ese nombre. Prueba con tu apellido o pregunta a los novios.";res.appendChild(li);return;}
+    if(f.length===1){show(f[0].mesa,f[0],false);return;}
+    f.forEach(function(i){
+      var li=document.createElement("li"),b=document.createElement("button");b.type="button";
+      b.appendChild(document.createTextNode(i.nombre));
+      var sp=document.createElement("span");sp.textContent=tableById(i.mesa).nombre;b.appendChild(sp);
+      b.addEventListener("click",function(){res.textContent="";q.value=i.nombre;show(i.mesa,i,true);});
+      li.appendChild(b);res.appendChild(li);
+    });
+  }
+  fetch(url,{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(!d||!d.mesas||!d.mesas.length||!d.invitados||!d.invitados.length) return;
+    if(!demo&&d.visibleDesde&&new Date()<new Date(d.visibleDesde+"T00:00:00+01:00")) return;
+    D=d; draw(); sec.hidden=false; q.addEventListener("input",search);
+  }).catch(function(){});
 })();
 </script>
 

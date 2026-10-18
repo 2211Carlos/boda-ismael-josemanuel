@@ -1,0 +1,381 @@
+{
+ "visibleDesde": "",
+ "mesas": [
+  {
+   "id": 1,
+   "nombre": "Mesa 1",
+   "x": 22,
+   "y": 38,
+   "sillas": 8
+  },
+  {
+   "id": 2,
+   "nombre": "Mesa 2",
+   "x": 50,
+   "y": 38,
+   "sillas": 8
+  },
+  {
+   "id": 3,
+   "nombre": "Mesa 3",
+   "x": 78,
+   "y": 38,
+   "sillas": 8
+  },
+  {
+   "id": 4,
+   "nombre": "Mesa 4",
+   "x": 22,
+   "y": 60,
+   "sillas": 8
+  },
+  {
+   "id": 5,
+   "nombre": "Mesa 5",
+   "x": 50,
+   "y": 60,
+   "sillas": 8
+  },
+  {
+   "id": 6,
+   "nombre": "Mesa 6",
+   "x": 78,
+   "y": 60,
+   "sillas": 8
+  },
+  {
+   "id": 7,
+   "nombre": "Mesa 7",
+   "x": 22,
+   "y": 82,
+   "sillas": 8
+  },
+  {
+   "id": 8,
+   "nombre": "Mesa 8",
+   "x": 50,
+   "y": 82,
+   "sillas": 8
+  },
+  {
+   "id": 9,
+   "nombre": "Mesa 9",
+   "x": 78,
+   "y": 82,
+   "sillas": 8
+  }
+ ],
+ "elementos": [
+  {
+   "texto": "Mesa de los novios",
+   "x": 50,
+   "y": 16,
+   "w": 44,
+   "h": 9
+  },
+  {
+   "texto": "Pista de baile",
+   "x": 50,
+   "y": 98,
+   "w": 44,
+   "h": 10
+  },
+  {
+   "texto": "Entrada",
+   "x": 6,
+   "y": 8,
+   "w": 16,
+   "h": 6
+  }
+ ],
+ "invitados": [
+  {
+   "nombre": "Antonio Gómez Vázquez",
+   "mesa": 1
+  },
+  {
+   "nombre": "Lucía Díaz Gómez",
+   "mesa": 1
+  },
+  {
+   "nombre": "Rafael Gómez Martín",
+   "mesa": 1
+  },
+  {
+   "nombre": "Ana Romero Ruiz",
+   "mesa": 1
+  },
+  {
+   "nombre": "Antonio Pérez Romero",
+   "mesa": 1
+  },
+  {
+   "nombre": "Rafael Moreno López",
+   "mesa": 1
+  },
+  {
+   "nombre": "Antonio López Vázquez",
+   "mesa": 1
+  },
+  {
+   "nombre": "Isabel García Martín",
+   "mesa": 1
+  },
+  {
+   "nombre": "Javier Gómez García",
+   "mesa": 2
+  },
+  {
+   "nombre": "Manuel García Ruiz",
+   "mesa": 2
+  },
+  {
+   "nombre": "Rafael Gómez Moreno",
+   "mesa": 2
+  },
+  {
+   "nombre": "Pablo Moreno Gómez",
+   "mesa": 2
+  },
+  {
+   "nombre": "Sara López Díaz",
+   "mesa": 2
+  },
+  {
+   "nombre": "Pedro García López",
+   "mesa": 2
+  },
+  {
+   "nombre": "Rafael Pérez Ruiz",
+   "mesa": 2
+  },
+  {
+   "nombre": "Pablo Ruiz Moreno",
+   "mesa": 2
+  },
+  {
+   "nombre": "Isabel Gómez Díaz",
+   "mesa": 3
+  },
+  {
+   "nombre": "Pablo Gómez Pérez",
+   "mesa": 3
+  },
+  {
+   "nombre": "Elena García Ruiz",
+   "mesa": 3
+  },
+  {
+   "nombre": "Javier Díaz Vázquez",
+   "mesa": 3
+  },
+  {
+   "nombre": "Pedro Pérez Gómez",
+   "mesa": 3
+  },
+  {
+   "nombre": "Rosa Ruiz Martín",
+   "mesa": 3
+  },
+  {
+   "nombre": "Marta Romero Romero",
+   "mesa": 3
+  },
+  {
+   "nombre": "Marta Díaz Martín",
+   "mesa": 3
+  },
+  {
+   "nombre": "Pablo López García",
+   "mesa": 4
+  },
+  {
+   "nombre": "Manuel Moreno Moreno",
+   "mesa": 4
+  },
+  {
+   "nombre": "Pedro García Gómez",
+   "mesa": 4
+  },
+  {
+   "nombre": "Luis Moreno Gómez",
+   "mesa": 4
+  },
+  {
+   "nombre": "Elena Vázquez Ruiz",
+   "mesa": 4
+  },
+  {
+   "nombre": "Antonio García Ruiz",
+   "mesa": 4
+  },
+  {
+   "nombre": "Ana Martín Martín",
+   "mesa": 4
+  },
+  {
+   "nombre": "Luis Pérez Moreno",
+   "mesa": 4
+  },
+  {
+   "nombre": "Manuel Gómez Ruiz",
+   "mesa": 5
+  },
+  {
+   "nombre": "Lucía García Díaz",
+   "mesa": 5
+  },
+  {
+   "nombre": "Elena Díaz López",
+   "mesa": 5
+  },
+  {
+   "nombre": "Isabel Moreno Romero",
+   "mesa": 5
+  },
+  {
+   "nombre": "Isabel Gómez Vázquez",
+   "mesa": 5
+  },
+  {
+   "nombre": "Pedro Gómez Vázquez",
+   "mesa": 5
+  },
+  {
+   "nombre": "Rosa Moreno Pérez",
+   "mesa": 5
+  },
+  {
+   "nombre": "Manuel Moreno Ruiz",
+   "mesa": 5
+  },
+  {
+   "nombre": "Manuel Vázquez Díaz",
+   "mesa": 6
+  },
+  {
+   "nombre": "Ana Moreno Gómez",
+   "mesa": 6
+  },
+  {
+   "nombre": "Elena García Moreno",
+   "mesa": 6
+  },
+  {
+   "nombre": "Lucía García Díaz",
+   "mesa": 6
+  },
+  {
+   "nombre": "Sara Díaz Díaz",
+   "mesa": 6
+  },
+  {
+   "nombre": "Rosa Romero García",
+   "mesa": 6
+  },
+  {
+   "nombre": "Luis García Díaz",
+   "mesa": 6
+  },
+  {
+   "nombre": "Rosa Romero Ruiz",
+   "mesa": 6
+  },
+  {
+   "nombre": "Elena López Díaz",
+   "mesa": 7
+  },
+  {
+   "nombre": "Javier Díaz Díaz",
+   "mesa": 7
+  },
+  {
+   "nombre": "Rosa Ruiz Moreno",
+   "mesa": 7
+  },
+  {
+   "nombre": "Pedro García Gómez",
+   "mesa": 7
+  },
+  {
+   "nombre": "Lucía Ruiz Vázquez",
+   "mesa": 7
+  },
+  {
+   "nombre": "Antonio Ruiz Pérez",
+   "mesa": 7
+  },
+  {
+   "nombre": "Elena López Moreno",
+   "mesa": 7
+  },
+  {
+   "nombre": "Pedro Martín Gómez",
+   "mesa": 7
+  },
+  {
+   "nombre": "Elena Díaz Pérez",
+   "mesa": 8
+  },
+  {
+   "nombre": "Sara López Martín",
+   "mesa": 8
+  },
+  {
+   "nombre": "Elena Pérez Gómez",
+   "mesa": 8
+  },
+  {
+   "nombre": "Sara Ruiz Pérez",
+   "mesa": 8
+  },
+  {
+   "nombre": "Pedro García Vázquez",
+   "mesa": 8
+  },
+  {
+   "nombre": "Carmen Díaz Gómez",
+   "mesa": 8
+  },
+  {
+   "nombre": "Javier Ruiz Díaz",
+   "mesa": 8
+  },
+  {
+   "nombre": "Marta Gómez Díaz",
+   "mesa": 8
+  },
+  {
+   "nombre": "Lucía Moreno Ruiz",
+   "mesa": 9
+  },
+  {
+   "nombre": "Rosa Romero Díaz",
+   "mesa": 9
+  },
+  {
+   "nombre": "Pablo Ruiz Moreno",
+   "mesa": 9
+  },
+  {
+   "nombre": "Pablo García Moreno",
+   "mesa": 9
+  },
+  {
+   "nombre": "Lucía Pérez García",
+   "mesa": 9
+  },
+  {
+   "nombre": "Rafael Gómez Vázquez",
+   "mesa": 9
+  },
+  {
+   "nombre": "Pablo Vázquez Pérez",
+   "mesa": 9
+  },
+  {
+   "nombre": "Luis Romero Vázquez",
+   "mesa": 9
+  }
+ ]
+}
