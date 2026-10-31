@@ -318,10 +318,45 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
 .preview .pv-l{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .preview .pv-v{font:400 18px/1.35 var(--display);color:var(--fg);overflow-wrap:anywhere}
 .preview .pv-f{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);font:italic 400 18px var(--display);color:var(--wax)}
+
+/* Portada: ambiente */
+.stage > :not(.mote):not(.bgfx){position:relative;z-index:2}
+.stage .bgfx{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.stage .bgfx *{position:absolute;pointer-events:none}
+.cloud{left:-40%;width:70%;height:90px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,0));filter:blur(6px);opacity:.85;animation:drift var(--t,60s) linear var(--d,0s) infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(230%)}}
+.mono-s{left:50%;top:50%;transform:translate(-50%,-52%);font:italic 400 min(78vw,360px)/1 var(--display);color:transparent;-webkit-text-stroke:1px rgba(44,122,75,.22);white-space:nowrap;letter-spacing:-.02em}
+.frame-s{inset:14px;border:1px solid rgba(44,122,75,.38);border-radius:2px}
+.frame-s::before{content:"";position:absolute;inset:5px;border:1px solid rgba(44,122,75,.2)}
+.frame-s i{width:9px;height:9px;background:var(--e-bg1);border:1px solid rgba(44,122,75,.55);transform:rotate(45deg)}
+.frame-s i:nth-child(1){left:-5px;top:-5px}.frame-s i:nth-child(2){right:-5px;top:-5px}
+.frame-s i:nth-child(3){left:-5px;bottom:-5px}.frame-s i:nth-child(4){right:-5px;bottom:-5px}
+.pt{top:-30px;width:11px;height:15px;border-radius:70% 0 70% 0;opacity:0;animation:fall var(--t,14s) linear var(--d,0s) infinite}
+@keyframes fall{0%{transform:translate(0,0) rotate(0);opacity:0}8%{opacity:.75}50%{transform:translate(var(--sw,24px),55vh) rotate(180deg)}92%{opacity:.6}100%{transform:translate(calc(var(--sw,24px) * -1),112vh) rotate(380deg);opacity:0}}
+.eyebrow-s::after{content:"";display:block;width:46px;height:1px;margin:14px auto 0;background:var(--seal);opacity:.7}
+.date-s{text-align:center;font:italic 400 22px var(--display);letter-spacing:.08em;color:var(--e-text);margin:0;opacity:0;animation:fadein 1.2s ease 2.2s forwards}
+.date-s small{display:block;margin-top:6px;font:500 11px var(--body);letter-spacing:.34em;text-transform:uppercase;color:var(--seal)}
+.hint::before{content:"";display:block;width:14px;height:14px;margin:0 auto 12px;border-radius:50%;border:1.5px solid var(--seal);animation:tapring 2s ease-out 3s infinite}
+@keyframes tapring{0%{box-shadow:0 0 0 0 rgba(44,122,75,.5)}100%{box-shadow:0 0 0 16px rgba(44,122,75,0)}}
+@media (prefers-reduced-motion:reduce){.cloud,.pt,.hint::before{animation:none}.pt{opacity:.5;top:20%}.date-s{opacity:.8;animation:none}}
+html.opening .date-s{animation:fadeout .6s ease forwards}
 </style>
 </head>
 <body>
 <div class="stage" id="stage">
+  <div class="bgfx" aria-hidden="true">
+    <span class="cloud" style="top:9%;--t:70s;--d:-20s"></span>
+    <span class="cloud" style="top:62%;width:90%;--t:90s;--d:-60s;opacity:.7"></span>
+    <span class="cloud" style="top:80%;--t:75s;--d:-5s;opacity:.6"></span>
+    <span class="mono-s">I&amp;J</span>
+    <span class="frame-s"><i></i><i></i><i></i><i></i></span>
+    <span class="pt" style="left:12%;background:#7cc79b;--t:15s;--d:0s;--sw:26px"></span>
+    <span class="pt" style="left:28%;background:#8ec5ea;--t:19s;--d:-6s;--sw:-30px"></span>
+    <span class="pt" style="left:46%;background:#7cc79b;--t:17s;--d:-11s;--sw:22px"></span>
+    <span class="pt" style="left:63%;background:#5aa7dc;--t:21s;--d:-3s;--sw:-24px"></span>
+    <span class="pt" style="left:79%;background:#7cc79b;--t:16s;--d:-9s;--sw:30px"></span>
+    <span class="pt" style="left:90%;background:#8ec5ea;--t:20s;--d:-14s;--sw:-20px"></span>
+  </div>
   <p class="eyebrow-s">Tienes una invitación</p>
   <div class="float">
     <button class="env" id="env" type="button" aria-label="Abrir la invitación de boda de Ismael y José Manuel">
@@ -333,6 +368,7 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
       <span class="seal wax" aria-hidden="true">I&amp;J</span>
     </button>
   </div>
+  <p class="date-s">19 · 12 · 2026<small>Ismael y José Manuel</small></p>
   <p class="hint">Toca el sobre para abrirlo</p>
 </div>
 
