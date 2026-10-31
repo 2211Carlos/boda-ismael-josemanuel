@@ -52,8 +52,8 @@ html.js .stage{display:flex}
 .eyebrow-s{font-size:12px;font-weight:400;letter-spacing:.38em;text-transform:uppercase;opacity:0;animation:fadein 1.4s ease .9s forwards;margin:0;text-align:center}
 .hint{font-size:12px;font-weight:400;letter-spacing:.3em;text-transform:uppercase;margin:0;text-align:center;opacity:0;animation:fadein 1.2s ease 1.8s forwards,pulse 3s ease-in-out 3s infinite}
 html.opening .eyebrow-s,html.opening .hint{animation:fadeout .6s ease forwards}
-.float{perspective:1000px;opacity:0;animation:enter 1.5s cubic-bezier(.2,.7,.2,1) .2s forwards,floaty 6s ease-in-out 1.7s infinite}
-html.opening .float{animation-play-state:paused,paused}
+.float{perspective:1000px;opacity:0;animation:enter 1.5s cubic-bezier(.2,.7,.2,1) .2s forwards}
+html.opening .float{animation-play-state:paused}
 .env{appearance:none;border:0;background:none;padding:0;margin:0;cursor:pointer;font:inherit;color:inherit;display:block;position:relative;
   width:min(88vw,440px);aspect-ratio:3/2;perspective:1400px;container-type:inline-size;-webkit-tap-highlight-color:transparent;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease-out}
 .env:focus-visible{outline:2px solid var(--e-text);outline-offset:14px}
@@ -342,7 +342,7 @@ html.opening .date-s{animation:fadeout .6s ease forwards}
 .hint{font-weight:500!important;font-size:13px!important;color:#14203a;opacity:.9}
 .hint b{display:block;font-size:20px;line-height:1;margin-bottom:8px;color:var(--seal);animation:bob 1.4s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.e-back{animation:glow 2.4s ease-in-out 2.4s infinite}
+
 @keyframes glow{0%,100%{box-shadow:0 40px 70px -24px rgba(40,100,150,.45),0 0 0 0 rgba(44,122,75,.0)}50%{box-shadow:0 40px 70px -24px rgba(40,100,150,.45),0 0 0 12px rgba(44,122,75,.2),0 0 38px 6px rgba(44,122,75,.28)}}
 
 
@@ -637,7 +637,7 @@ var CONFIG = {
   env.addEventListener("click", openEnv);
   stage.addEventListener("click", openEnv);
   stage.addEventListener("pointermove", function(e){
-    if (reduce || root.classList.contains("opening")) return;
+    return;
     env.style.setProperty("--ry", ((e.clientX / window.innerWidth - .5) * 16).toFixed(1) + "deg");
     env.style.setProperty("--rx", (-(e.clientY / window.innerHeight - .5) * 12).toFixed(1) + "deg");
   });
