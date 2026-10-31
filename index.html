@@ -458,16 +458,17 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
           <textarea id="msg" name="msg" placeholder="Unas palabras para los novios"></textarea>
         </div>
         <p class="err" id="err" role="alert"></p>
-        <button class="btn" type="submit">Preparar mi confirmación</button>
+        <button class="btn" type="submit">Enviar mi confirmación</button>
       </form>
 
       <div id="result" hidden>
-        <h2 style="font-size:32px">Último paso</h2>
+        <h2 style="font-size:32px" id="rtitle">Último paso</h2>
+        <p class="status" id="saved" aria-live="polite"></p>
         <div class="preview" id="preview"></div>
         <a class="btn" id="wa" href="https://wa.me/" target="_blank" rel="noopener">Enviar por WhatsApp</a>
         <button class="btn alt" type="button" id="copy">Copiar mensaje</button>
         <p class="status" id="status" aria-live="polite"></p>
-        <ol class="steps">
+        <ol class="steps" id="steps">
           <li>Toca "Enviar por WhatsApp".</li>
           <li>Pulsa enviar en el chat que se abre. Tu confirmación solo llega cuando la envías.</li>
         </ol>
@@ -495,6 +496,7 @@ var CONFIG = {
   fecha: "2026-12-19",
   hora: "12:00",   /* hora de la ceremonia, para la cuenta atrás */
   limite: "5 de diciembre",     /* fecha límite para confirmar, texto libre */
+  hoja: "",   /* dirección de la hoja de Google (Apps Script). Vacía = solo WhatsApp */
   whatsapp: "34613951299"   /* número de los novios con prefijo y sin +, por ejemplo 34600111222 */
 };
 
@@ -631,8 +633,29 @@ var CONFIG = {
     $("preview").textContent = message;
     $("wa").href = "https://wa.me/" + (CONFIG.whatsapp || "") + "?text=" + encodeURIComponent(message);
     $("status").textContent = "";
-    form.hidden = true; result.hidden = false;
-    result.scrollIntoView({block:"nearest"});
+    var steps = $("steps"), title = $("rtitle"), saved = $("saved");
+    function showResult(ok){
+      if (ok) {
+        title.textContent = "¡Confirmación recibida!";
+        saved.textContent = "Gracias, " + nombre + ". Ya lo tenemos apuntado. Si quieres, avísanos también por WhatsApp.";
+        steps.hidden = true; $("wa").textContent = "Avisar también por WhatsApp";
+      } else {
+        title.textContent = "Último paso";
+        saved.textContent = CONFIG.hoja ? "No hemos podido guardarla directamente. Envíala por WhatsApp para que nos llegue." : "";
+        steps.hidden = false; $("wa").textContent = "Enviar por WhatsApp";
+      }
+      form.hidden = true; result.hidden = false;
+      result.scrollIntoView({block:"nearest"});
+    }
+    if (!CONFIG.hoja) { showResult(false); return; }
+    var btn = form.querySelector("button[type=submit]"); btn.disabled = true; btn.textContent = "Enviando…";
+    var payload = {nombre: nombre, asiste: vienes ? "Sí" : "No", acompanantes: vienes ? +$("acomp").value : 0,
+      menu: vienes ? $("menu").value.trim() : "", mensaje: m};
+    var to = new AbortController(); var tm = setTimeout(function(){ to.abort(); }, 15000);
+    fetch(CONFIG.hoja, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(payload), signal: to.signal})
+      .then(function(){ clearTimeout(tm); btn.disabled = false; btn.textContent = "Enviar mi confirmación"; showResult(true); })
+      .catch(function(){ clearTimeout(tm); btn.disabled = false; btn.textContent = "Enviar mi confirmación"; showResult(false); });
   });
 
   $("back").addEventListener("click", function(){ result.hidden = true; form.hidden = false; $("nombre").focus(); });
