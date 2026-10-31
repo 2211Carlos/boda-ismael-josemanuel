@@ -656,6 +656,16 @@ var CONFIG = {
     env.style.setProperty("--rx", (-(e.clientY / window.innerHeight - .5) * 12).toFixed(1) + "deg");
   });
 
+  /* Enlace personalizado: ?n=Nombre del invitado */
+  try {
+    var inv = (new URLSearchParams(location.search).get("n") || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    if (inv) {
+      var lb = document.querySelector(".label b"); if (lb) lb.textContent = "Para " + inv;
+      var nm = $("nombre"); if (nm) nm.value = inv;
+      env.setAttribute("aria-label", "Abrir la invitación de boda de Ismael y José Manuel para " + inv);
+    }
+  } catch (e) {}
+
   if (CONFIG.limite) $("deadline").textContent = "Necesitamos tu confirmación antes del " + CONFIG.limite + ".";
 
   /* ---------- Cuenta atrás en vivo (hora de España, diciembre = UTC+1) ---------- */
