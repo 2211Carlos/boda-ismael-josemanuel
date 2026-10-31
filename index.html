@@ -2,6 +2,16 @@
 <html lang="es">
 <head>
 <title>Invitación Ismael y José Manuel</title>
+<meta name="description" content="Ismael y José Manuel se casan el 19 de diciembre de 2026 en Lepe. Abre el sobre y confirma tu asistencia.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="💌 Ismael y José Manuel se casan">
+<meta property="og:description" content="19 de diciembre de 2026 · Lepe. Abre el sobre y confirma tu asistencia.">
+<meta property="og:url" content="https://2211carlos.github.io/boda-ismael-josemanuel/">
+<meta property="og:image" content="https://2211carlos.github.io/boda-ismael-josemanuel/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
@@ -470,6 +480,10 @@ html.opening .sp{display:none}
           <a class="btn alt" href="https://www.google.com/maps/search/?api=1&query=Recinto+La+Bella+Lepe" target="_blank" rel="noopener">Cómo llegar</a>
         </li>
       </ol>
+      <div class="rv" style="margin-top:34px">
+        <button class="btn alt" type="button" id="cal" style="max-width:320px">Añadir al calendario</button>
+        <p class="status" id="calmsg" aria-live="polite"></p>
+      </div>
     </div>
   </section>
 
@@ -955,6 +969,32 @@ var CONFIG = {
     if(open(d)){ start(); return; }
     var t=setInterval(function(){ if(open(d)){ clearInterval(t); start(); } },30000);
   }).catch(function(){});
+})();
+
+(function(){
+  var b=document.getElementById("cal"); if(!b) return;
+  function ics(){
+    var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Boda Ismael y Jose Manuel//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      "BEGIN:VTIMEZONE","TZID:Europe/Madrid","BEGIN:STANDARD","DTSTART:19701025T030000","RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU","TZOFFSETFROM:+0200","TZOFFSETTO:+0100","TZNAME:CET","END:STANDARD",
+      "BEGIN:DAYLIGHT","DTSTART:19700329T020000","RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU","TZOFFSETFROM:+0100","TZOFFSETTO:+0200","TZNAME:CEST","END:DAYLIGHT","END:VTIMEZONE"];
+    function ev(uid,ini,fin,res,lug){
+      L.push("BEGIN:VEVENT","UID:"+uid+"@boda-ismael-josemanuel","DTSTAMP:20261031T200000Z",
+        "DTSTART;TZID=Europe/Madrid:"+ini,"DTEND;TZID=Europe/Madrid:"+fin,"SUMMARY:"+res,"LOCATION:"+lug,
+        "DESCRIPTION:Boda de Ismael y José Manuel","BEGIN:VALARM","TRIGGER:-P1D","ACTION:DISPLAY","DESCRIPTION:Mañana es la boda","END:VALARM","END:VEVENT");
+    }
+    ev("ceremonia","20261219T120000","20261219T133000","Ceremonia · Boda de Ismael y José Manuel","Capilla de San Cristóbal\\, C. San Cristóbal 4\\, 21440 Lepe\\, Huelva");
+    ev("celebracion","20261219T143000","20261220T000000","Celebración · Boda de Ismael y José Manuel","Recinto de La Bella\\, Lepe\\, Huelva");
+    L.push("END:VCALENDAR"); return L.join("\r\n");
+  }
+  b.addEventListener("click",function(){
+    var m=document.getElementById("calmsg");
+    try{
+      var blob=new Blob([ics()],{type:"text/calendar;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");
+      a.href=u;a.download="boda-ismael-y-jose-manuel.ics";document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u);},4000);
+      m.textContent="Listo. Abre el archivo para añadir la ceremonia (12:00) y la celebración (14:30) a tu calendario.";
+    }catch(e){ m.textContent="No se ha podido crear el evento. Apunta: sábado 19 de diciembre, ceremonia 12:00 y celebración 14:30."; }
+  });
 })();
 </script>
 
