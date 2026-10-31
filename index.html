@@ -307,6 +307,14 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
 .go-btn{appearance:none;margin:14px 0 0;font:500 12px var(--body);letter-spacing:.2em;text-transform:uppercase;min-height:48px;padding:0 20px;border:1px solid var(--wax);background:transparent;color:var(--wax);cursor:pointer}
 .go-btn:focus-visible{outline:2px solid var(--wax);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.plan .route.go,.plan .aqui .pulse{animation:none}}
+
+.preview{white-space:normal}
+.preview .pv-t{font:400 22px var(--display);color:var(--wax);margin:0 0 2px}
+.preview .pv-s{font-size:13px;letter-spacing:.06em;color:var(--muted);margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.preview .pv-r{margin:0 0 12px;display:flex;flex-direction:column;gap:2px}
+.preview .pv-l{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.preview .pv-v{font:400 18px/1.35 var(--display);color:var(--fg);overflow-wrap:anywhere}
+.preview .pv-f{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);font:italic 400 18px var(--display);color:var(--wax)}
 </style>
 </head>
 <body>
@@ -617,20 +625,31 @@ var CONFIG = {
     if (!nombre) { $("err").textContent = "Escribe tu nombre para que sepamos quién eres."; $("nombre").focus(); return; }
     $("err").textContent = "";
     var vienes = form.asis.value === "si";
-    var lines = ["Hola, Ismael y José Manuel. Soy " + nombre + "."];
+    var rows = [["👤", "Nombre", nombre]];
     if (vienes) {
-      lines.push("Confirmo mi asistencia a vuestra boda del 19 de diciembre (ceremonia a las 12:00 y celebración a las 14:30).");
-      var n = +$("acomp").value;
-      lines.push("Acompañantes: " + n + (n ? " (en total somos " + (n+1) + ")" : "") + ".");
-      var menu = $("menu").value.trim();
-      lines.push("Alergias o menú: " + (menu || "ninguno") + ".");
+      var n = +$("acomp").value, menu = $("menu").value.trim();
+      rows.push(["✅", "Asistencia", "Sí, allí estaré"]);
+      rows.push(["👥", "Acompañantes", n ? "Un acompañante (en total somos 2)" : "Ninguno"]);
+      rows.push(["🍽️", "Alergias o menú", menu || "Ninguno"]);
     } else {
-      lines.push("Lo siento mucho, no podré asistir a vuestra boda.");
+      rows.push(["❌", "Asistencia", "Lo siento, no podré asistir"]);
     }
     var m = $("msg").value.trim();
-    if (m) lines.push("Mensaje: " + m);
-    message = lines.join("\n");
-    $("preview").textContent = message;
+    if (m) rows.push(["💬", "Mensaje", m]);
+    var head = "Boda de Ismael y José Manuel · 19 de diciembre de 2026";
+    message = "💌 *Confirmación de asistencia*\n" + head + "\n\n" +
+      rows.map(function(r){ return r[0] + " *" + r[1] + ":* " + r[2]; }).join("\n") +
+      "\n\n" + (vienes ? "¡Nos vemos allí! 🥂" : "Os mando un abrazo muy fuerte 🤍");
+    var pv = $("preview"); pv.textContent = "";
+    var t1 = document.createElement("p"); t1.className = "pv-t"; t1.textContent = "💌 Confirmación de asistencia"; pv.appendChild(t1);
+    var t2 = document.createElement("p"); t2.className = "pv-s"; t2.textContent = head; pv.appendChild(t2);
+    rows.forEach(function(r){
+      var d = document.createElement("p"); d.className = "pv-r";
+      var l = document.createElement("span"); l.className = "pv-l"; l.textContent = r[0] + " " + r[1];
+      var v = document.createElement("span"); v.className = "pv-v"; v.textContent = r[2];
+      d.appendChild(l); d.appendChild(v); pv.appendChild(d);
+    });
+    var t3 = document.createElement("p"); t3.className = "pv-f"; t3.textContent = vienes ? "¡Nos vemos allí! 🥂" : "Os mando un abrazo muy fuerte 🤍"; pv.appendChild(t3);
     $("wa").href = "https://wa.me/" + (CONFIG.whatsapp || "") + "?text=" + encodeURIComponent(message);
     $("status").textContent = "";
     var steps = $("steps"), title = $("rtitle"), saved = $("saved");
