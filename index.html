@@ -336,10 +336,19 @@ footer small{display:block;margin-top:10px;font-size:11px;font-weight:400;letter
 .eyebrow-s::after{content:"";display:block;width:46px;height:1px;margin:14px auto 0;background:var(--seal);opacity:.7}
 .date-s{text-align:center;font:italic 400 22px var(--display);letter-spacing:.08em;color:var(--e-text);margin:0;opacity:0;animation:fadein 1.2s ease 2.2s forwards}
 .date-s small{display:block;margin-top:6px;font:500 11px var(--body);letter-spacing:.34em;text-transform:uppercase;color:var(--seal)}
-.hint::before{content:"";display:block;width:14px;height:14px;margin:0 auto 12px;border-radius:50%;border:1.5px solid var(--seal);animation:tapring 2s ease-out 3s infinite}
-@keyframes tapring{0%{box-shadow:0 0 0 0 rgba(44,122,75,.5)}100%{box-shadow:0 0 0 16px rgba(44,122,75,0)}}
-@media (prefers-reduced-motion:reduce){.cloud,.pt,.hint::before{animation:none}.pt{opacity:.5;top:20%}.date-s{opacity:.8;animation:none}}
+@media (prefers-reduced-motion:reduce){.cloud,.pt,.e-back,.hand{animation:none}.pt{opacity:.5;top:20%}.date-s{opacity:.8;animation:none}}
 html.opening .date-s{animation:fadeout .6s ease forwards}
+
+.hint{font-weight:500!important;font-size:13px!important;color:#14203a;opacity:.9}
+.hint b{display:block;font-size:20px;line-height:1;margin-bottom:8px;color:var(--seal);animation:bob 1.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.e-back{animation:glow 2.4s ease-in-out 2.4s infinite}
+@keyframes glow{0%,100%{box-shadow:0 40px 70px -24px rgba(40,100,150,.45),0 0 0 0 rgba(44,122,75,.0)}50%{box-shadow:0 40px 70px -24px rgba(40,100,150,.45),0 0 0 12px rgba(44,122,75,.2),0 0 38px 6px rgba(44,122,75,.28)}}
+.hand{left:53%;top:62%;width:11cqw;height:11cqw;z-index:7;pointer-events:none;opacity:0;animation:handin .8s ease 2.6s forwards,tap 1.6s ease-in-out 3.4s infinite;filter:drop-shadow(0 3px 5px rgba(10,30,60,.35))}
+.hand svg{display:block;width:100%;height:100%}
+@keyframes handin{to{opacity:1}}
+@keyframes tap{0%,100%{transform:translate(0,0) scale(1)}45%{transform:translate(-3cqw,-5cqw) scale(.92)}}
+html.opening .hand{display:none}
 </style>
 </head>
 <body>
@@ -366,10 +375,11 @@ html.opening .date-s{animation:fadeout .6s ease forwards}
       <span class="label" aria-hidden="true"><b>Para ti</b>Invitación de boda</span>
       <span class="flap"></span>
       <span class="seal wax" aria-hidden="true">I&amp;J</span>
+      <span class="hand" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 0 1 3 0v5.5l5 1a2.5 2.5 0 0 1 2 2.5V17a5 5 0 0 1-5 5h-2.6a5 5 0 0 1-3.9-1.9L4.5 15.6a1.6 1.6 0 0 1 2.3-2.2L9 15.2z" fill="#fff" stroke="#14203a" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
     </button>
   </div>
   <p class="date-s">19 · 12 · 2026<small>Ismael y José Manuel</small></p>
-  <p class="hint">Toca el sobre para abrirlo</p>
+  <p class="hint"><b aria-hidden="true">↑</b>Toca el sobre para abrirlo</p>
 </div>
 
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -616,6 +626,7 @@ var CONFIG = {
     setTimeout(function(){ stage.hidden = true; }, reduce ? 0 : 5200);
   }
   env.addEventListener("click", openEnv);
+  stage.addEventListener("click", openEnv);
   stage.addEventListener("pointermove", function(e){
     if (reduce || root.classList.contains("opening")) return;
     env.style.setProperty("--ry", ((e.clientX / window.innerWidth - .5) * 16).toFixed(1) + "deg");
