@@ -510,6 +510,7 @@ html.opening .sp{display:none}
       <div class="rv">
         <h2 id="rsvp">Confirma <em>tu asistencia</em></h2>
         <p class="lead" id="deadline">Necesitamos tu confirmación para organizarlo todo. Tarda menos de un minuto.</p>
+        <p class="lead" id="plazas" hidden></p>
       </div>
       <form id="form" class="rv" novalidate>
         <div>
@@ -522,8 +523,8 @@ html.opening .sp{display:none}
           <input type="radio" id="no" name="asis" value="no"><label for="no">No podré ir</label>
         </fieldset>
         <div id="extra" style="display:flex;flex-direction:column;gap:30px">
-          <div>
-            <label for="acomp">Acompañantes</label>
+          <div id="acompBox">
+            <label for="acomp" id="acompLbl">Acompañantes</label>
             <select id="acomp" name="acomp">
               <option value="0">Ninguno</option><option value="1">Un acompañante</option>
             </select>
@@ -656,16 +657,30 @@ var CONFIG = {
     env.style.setProperty("--rx", (-(e.clientY / window.innerHeight - .5) * 12).toFixed(1) + "deg");
   });
 
-  /* Enlace personalizado: ?n=Nombre del invitado */
+  /* Enlace personalizado: ?n=Nombre &a=Acompañante &p=1|2 (plazas de la invitación) */
+  var plazas = 0, acompNombre = "";
   try {
-    var inv = (new URLSearchParams(location.search).get("n") || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    var qs = new URLSearchParams(location.search);
+    var clean = function(k){ return (qs.get(k) || "").replace(/\s+/g, " ").trim().slice(0, 40); };
+    var inv = clean("n"); acompNombre = clean("a");
+    plazas = qs.get("p") === "1" ? 1 : (qs.get("p") === "2" || acompNombre) ? 2 : 0;
     if (inv) {
-      var lb = document.querySelector(".label b"); if (lb) lb.textContent = "Para " + inv;
+      var etiqueta = "Para " + inv + (plazas === 2 ? (acompNombre ? " y " + acompNombre : " y acompañante") : "");
+      var lb = document.querySelector(".label b"); if (lb) lb.textContent = etiqueta;
       var nm = $("nombre"); if (nm) nm.value = inv;
-      env.setAttribute("aria-label", "Abrir la invitación de boda de Ismael y José Manuel para " + inv);
+      env.setAttribute("aria-label", "Abrir la invitación de boda de Ismael y José Manuel. " + etiqueta);
+    }
+    if (plazas) {
+      var pz = $("plazas"); pz.hidden = false;
+      pz.textContent = plazas === 1 ? "Invitación personal e individual, válida para una persona."
+        : "Invitación nominal para dos personas" + (acompNombre ? ": " + (inv || "tú") + " y " + acompNombre + "." : ": tú y tu acompañante.");
+      if (plazas === 1) { $("acompBox").hidden = true; $("acomp").value = "0"; }
+      else {
+        $("acompLbl").textContent = acompNombre ? "¿Venís " + (inv ? inv.split(" ")[0] : "tú") + " y " + acompNombre.split(" ")[0] + "?" : "¿Venís los dos?";
+        $("acomp").innerHTML = '<option value="1">Sí, vamos los dos</option><option value="0">Solo yo</option>';
+      }
     }
   } catch (e) {}
-
   if (CONFIG.limite) $("deadline").textContent = "Necesitamos tu confirmación antes del " + CONFIG.limite + ".";
 
   /* ---------- Cuenta atrás en vivo (hora de España, diciembre = UTC+1) ---------- */
@@ -713,7 +728,7 @@ var CONFIG = {
     if (vienes) {
       var n = +$("acomp").value, menu = $("menu").value.trim();
       rows.push(["✅", "Asistencia", "Sí, allí estaré"]);
-      rows.push(["👥", "Acompañantes", n ? "Un acompañante (en total somos 2)" : "Ninguno"]);
+      rows.push(["👥", "Acompañantes", n ? (acompNombre ? acompNombre + " (en total somos 2)" : "Un acompañante (en total somos 2)") : "Ninguno"]);
       rows.push(["🍽️", "Alergias o menú", menu || "Ninguno"]);
     } else {
       rows.push(["❌", "Asistencia", "Lo siento, no podré asistir"]);
