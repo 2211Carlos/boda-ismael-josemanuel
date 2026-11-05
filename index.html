@@ -388,6 +388,19 @@ html.opening .sp{display:none}
 .stage::before{animation:sun 9s ease-in-out .2s forwards}
 .hint{animation:fadein 1.2s ease 4.8s forwards,pulse 3s ease-in-out 6.6s infinite}
 @media (prefers-reduced-motion:reduce){.float{animation:none;opacity:1;transform:none}.stage::before{animation:none}.hint{animation:none;opacity:.95}}
+
+/* Sobre con más volumen: pliegues marcados, sombra bajo la solapa y grosor de papel */
+.p-left{background:linear-gradient(100deg,#5f9fcf 0%,#86c0e8 55%,#6fb0de 100%)}
+.p-right{background:linear-gradient(260deg,#4f93c5 0%,#76b4e0 60%,#69a9d8 100%)}
+.p-bottom{background:linear-gradient(0deg,#5da0d0 0%,#9fd3f2 70%,#8cc6ea 100%)}
+.flap::before{background:linear-gradient(180deg,#c3e6fb 0%,#99cdef 62%,#78b4de 100%)}
+.e-back{background:#cfe6f6;border-radius:2px;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 2px 0 #7fb2da,0 3px 0 #5e96c4,0 40px 70px -24px rgba(20,60,110,.55)}
+.env::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:2px;
+  background:linear-gradient(135deg,rgba(255,255,255,.22),transparent 38%,rgba(0,40,90,.16) 100%),url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200' preserveAspectRatio='none'><polygon points='0,0 300,0 150,114' fill='rgba%288,36,74,.30%29'/><g fill='none' stroke-linecap='round'><path d='M0 200L150 104M300 200L150 104' stroke='rgba%28255,255,255,.7%29' stroke-width='1.4'/><path d='M0 1L150 105M300 1L150 105' stroke='rgba%2810,45,85,.35%29' stroke-width='1.6'/></g></svg>") 0 0/100% 100% no-repeat}
+html.opening .env::before{opacity:0;transition:opacity .4s ease}
+.label{z-index:5}
+@keyframes arrive{0%{opacity:0;transform:translate(9%,13%) rotate(-9deg) scale(.8)}16%{opacity:1}52%{opacity:1;transform:translate(9%,13%) rotate(-9deg) scale(.8)}100%{opacity:1;transform:rotate(-2.5deg)}}
+@media (prefers-reduced-motion:reduce){.float{transform:rotate(-2.5deg)}}
 </style>
 </head>
 <body>
