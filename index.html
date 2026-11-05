@@ -632,6 +632,13 @@ var CONFIG = {
     if (bgm.paused) { bgm.volume = 0; bgm.play().then(function(){ setSnd(true); fade(.7); }).catch(function(){}); }
     else { setSnd(false); fade(0, function(){ bgm.pause(); }); }
   });
+  /* Silencio automático: al abrir Google Maps o salir de la pestaña la música se pausa, y vuelve al regresar */
+  var autoPaused = false;
+  function leaveMusic(){ if (!bgm.paused) { autoPaused = true; clearInterval(fadeT); bgm.pause(); setSnd(false); } }
+  function backMusic(){ if (autoPaused) { autoPaused = false; bgm.volume = 0; var pr = bgm.play(); if (pr && pr.then) pr.then(function(){ setSnd(true); fade(.7); }).catch(function(){}); } }
+  snd.addEventListener("click", function(){ autoPaused = false; });
+  document.addEventListener("visibilitychange", function(){ if (document.hidden) leaveMusic(); else backMusic(); });
+  Array.prototype.forEach.call(document.querySelectorAll('a[href*="google.com/maps"]'), function(a){ a.addEventListener("click", leaveMusic); });
   function openEnv(){
     if (root.classList.contains("opening")) return;
     root.classList.add("opening");
