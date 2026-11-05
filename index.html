@@ -613,9 +613,11 @@ var CONFIG = {
   function setSnd(on){ snd.setAttribute("aria-pressed", on ? "true" : "false"); }
   function fade(to, done){
     clearInterval(fadeT);
+    var n = 0;
     fadeT = setInterval(function(){
+      n++;
       var v = bgm.volume, d = to - v;
-      if (Math.abs(d) < .03) { bgm.volume = to; clearInterval(fadeT); if (done) done(); }
+      if (Math.abs(d) < .03 || n > 30) { try { bgm.volume = to; } catch(e){} clearInterval(fadeT); if (done) done(); }
       else bgm.volume = Math.max(0, Math.min(1, v + (d > 0 ? .03 : -.03)));
     }, 60);
   }
@@ -630,7 +632,7 @@ var CONFIG = {
   }
   snd.addEventListener("click", function(){
     if (bgm.paused) { bgm.volume = 0; bgm.play().then(function(){ setSnd(true); fade(.7); }).catch(function(){}); }
-    else { setSnd(false); fade(0, function(){ bgm.pause(); }); }
+    else { setSnd(false); bgm.pause(); }
   });
   /* Silencio automático: al abrir Google Maps o salir de la pestaña la música se pausa, y vuelve al regresar */
   var autoPaused = false;
