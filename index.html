@@ -377,9 +377,17 @@ html.opening .sp{display:none}
   mix-blend-mode:multiply}
 .stage .bgfx,.stage .mote,.eyebrow-s,.date-s{display:none!important}
 .stage .float{filter:drop-shadow(14px 24px 18px rgba(30,6,0,.5))}
-.hint{color:#fff3e4!important;opacity:.95;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.hint{color:#fff3e4!important;opacity:0;text-shadow:0 1px 10px rgba(0,0,0,.35)}
 .hint b{color:#fff3e4!important}
 .env:focus-visible{outline-color:#fff3e4}
+
+/* Llegada: el sobre empieza colocado en la tela, ladeado, y a los pocos segundos se coloca en su sitio */
+@keyframes arrive{0%{opacity:0;transform:translate(9%,13%) rotate(-9deg) scale(.8)}16%{opacity:1}52%{opacity:1;transform:translate(9%,13%) rotate(-9deg) scale(.8)}100%{opacity:1;transform:none}}
+@keyframes sun{from{transform:translateX(-9%)}to{transform:translateX(6%)}}
+.float{animation:arrive 5.4s cubic-bezier(.5,.05,.2,1) .2s forwards}
+.stage::before{animation:sun 9s ease-in-out .2s forwards}
+.hint{animation:fadein 1.2s ease 4.8s forwards,pulse 3s ease-in-out 6.6s infinite}
+@media (prefers-reduced-motion:reduce){.float{animation:none;opacity:1;transform:none}.stage::before{animation:none}.hint{animation:none;opacity:.95}}
 </style>
 </head>
 <body>
