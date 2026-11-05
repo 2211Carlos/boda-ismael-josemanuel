@@ -365,6 +365,21 @@ html.opening .date-s{animation:fadeout .6s ease forwards}
   filter:drop-shadow(0 0 4px rgba(120,230,170,.95));animation:twinkle 2.4s ease-in-out var(--d,2.6s) infinite}
 @keyframes twinkle{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
 html.opening .sp{display:none}
+
+/* Portada en escena: el sobre sobre una tela terracota, con luz de ventana y sombras. Solo el sobre y la indicación de tocarlo. */
+.stage{background:radial-gradient(120% 80% at 30% 25%,#b8501e,#5a1f0b)}
+.stage::before,.stage::after{content:"";position:absolute;pointer-events:none}
+.stage::before{inset:-30%;z-index:0;
+  background:linear-gradient(112deg,transparent 0 24%,rgba(255,200,150,.6) 24% 41%,transparent 41%),repeating-linear-gradient(118deg,transparent 0 46px,rgba(255,190,130,.16) 62px,transparent 92px 150px);
+  filter:blur(16px);mix-blend-mode:soft-light}
+.stage::after{inset:0;z-index:1;
+  background:linear-gradient(112deg,transparent 0 56%,rgba(35,8,0,.5) 56% 74%,transparent 74%),radial-gradient(90% 70% at 50% 40%,transparent 40%,rgba(0,0,0,.5));
+  mix-blend-mode:multiply}
+.stage .bgfx,.stage .mote,.eyebrow-s,.date-s{display:none!important}
+.stage .float{filter:drop-shadow(14px 24px 18px rgba(30,6,0,.5))}
+.hint{color:#fff3e4!important;opacity:.95;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.hint b{color:#fff3e4!important}
+.env:focus-visible{outline-color:#fff3e4}
 </style>
 </head>
 <body>
